@@ -8,6 +8,7 @@
     const nodemailer = require('nodemailer')
     const axios = require('axios');
     const bodyParser = require('body-parser');
+   
 
 
 /*
@@ -198,7 +199,6 @@ function storeToken(token){
 
 
 exports.forgotPassword = async (req, res) => {
-    
     const { email } = req.body;
 
     // SQL Server configuration
@@ -206,13 +206,13 @@ exports.forgotPassword = async (req, res) => {
         database: 'login_crud',
         server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
         driver: 'msnodesqlv8',
-       options: {       
-         trustedConnection: true
+        options: {       
+            trustedConnection: true
         }  
-     }; 
-    
+    }; 
 
     let token;
+    let sixDigitCode; // Variable to store the six-digit code
 
     try {
         const pool = await sql.connect(config);
@@ -223,13 +223,18 @@ exports.forgotPassword = async (req, res) => {
             .query('SELECT * FROM users WHERE email = @email');
 
         if (queryResult.recordset.length === 0) {
-            return res.render('forgotpage', { msg: 'Failed to send reset email', msg_type:"error" })
+            return res.render('forgotpage', { msg: 'Failed to send reset email', msg_type: 'error' });
         }
 
         // Email exists, generate a reset token
-         token = crypto.randomBytes(32).toString('hex');
-         //storeToken(token)
-         req.session.resetToken = token; // Store the token in the session
+        token = crypto.randomBytes(32).toString('hex');
+
+        // Generate a random six-digit code
+        sixDigitCode = Math.floor(100000 + Math.random() * 900000);
+
+        // Store the token and code in the session
+        req.session.resetToken = token;
+        req.session.sixDigitCode = sixDigitCode;
 
       
  // Get the current date and time
@@ -250,7 +255,8 @@ const insertTokenQuery = await pool.request()
     .input('email', sql.NVarChar, email)
     .input('token', sql.NVarChar, token)
     .input('expires', sql.NVarChar, formattedExpiresTime) // Use formatted time
-    .query('INSERT INTO PasswordResetTokens (email, token, expires) VALUES (@email, @token, @expires)');
+    .input('sixDigitCode',sql.NVarChar, sixDigitCode)
+    .query('INSERT INTO PasswordResetTokens (email, token, expires,verification_code) VALUES (@email, @token, @expires,@sixDigitCode)');
 
 
 
@@ -275,7 +281,7 @@ const insertTokenQuery = await pool.request()
             from: 'esspldummy18@gmail.com',
             to: email,
             subject: 'Password Reset Request',
-            text: `To reset your password, click the following link: "http://localhost:5000/passreset\n\nToken: ${token}`,
+            text: `To reset your password, click the following link: "http://localhost:5000/passreset\n\n Verfication code: ${sixDigitCode}`,
            // html: `To reset your password, click the following link: <a href="http://localhost:5000/passreset?token=${token}">Reset Password</a>`
         };
 
@@ -303,17 +309,16 @@ const insertTokenQuery = await pool.request()
 
 
 exports.resetPassword = async (req, res) => {
-    const { newPassword, confirmPassword } = req.body;
+    const {Verfication, newPassword, confirmPassword } = req.body;
 
     // Extract the token from session
     const token = req.session.resetToken;
+   // const code=req.session.verification_code;
+   const code=Verfication;
 
     // Check if the token is in the session
-    if (!token) {
-        return res.render('passreset', { msg: 'No token in session', msg_type: 'error' });
-    }
-
-    console.log(token);
+  
+    console.log(code);
 
     // SQL Server configuration
     var config = {    
@@ -337,11 +342,12 @@ exports.resetPassword = async (req, res) => {
         // Check if the token is valid and not expired
         const queryResult = await pool.request()
             .input('token', sql.NVarChar, token)
-            .query('SELECT * FROM PasswordResetTokens WHERE token = @token AND expires > GETDATE()');
+            .input('code', sql.NVarChar, code)
+            .query('SELECT * FROM PasswordResetTokens WHERE verification_code = @code AND expires > GETDATE()');
 
         if (queryResult.recordset.length === 0) {
             // Token is either invalid or expired
-            return res.render('passreset', { msg: 'Invalid or expired token', msg_type: 'error' });
+            return res.render('passreset', { msg: 'Invalid or expired verification_code', msg_type: 'error' });
         }
 
         // Valid token, hash the new password
@@ -358,7 +364,8 @@ exports.resetPassword = async (req, res) => {
             // Remove the used token from the 'PasswordResetTokens' table
             const deleteTokenQuery = await pool.request()
                 .input('token', sql.NVarChar, token)
-                .query('DELETE FROM PasswordResetTokens WHERE token = @token');
+                .input('code', sql.NVarChar, code)
+                .query('DELETE FROM PasswordResetTokens WHERE verification_code = @code');
 
             if (deleteTokenQuery.rowsAffected[0] === 1) {
                 // Token successfully deleted
