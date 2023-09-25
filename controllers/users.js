@@ -22,13 +22,13 @@ var config = {
 
  
 var config = {    
-    database: 'login',
-    server: 'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+    database: 'login_crud',
+    server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
     driver: 'msnodesqlv8',
    options: {       
      trustedConnection: true
     }  
- };
+ }; 
 
 
 
@@ -202,14 +202,15 @@ exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
 
     // SQL Server configuration
-    const config = {
-        server: 'WIN-MUSC6MOGOU0\\SQLEXPRESS',
-        database: 'login',
+    var config = {    
+        database: 'login_crud',
+        server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
         driver: 'msnodesqlv8',
-        options: {
-            trustedConnection: true
-        }
-    };
+       options: {       
+         trustedConnection: true
+        }  
+     }; 
+    
 
     let token;
 
@@ -315,14 +316,15 @@ exports.resetPassword = async (req, res) => {
     console.log(token);
 
     // SQL Server configuration
-    const config = {
-        server: 'WIN-MUSC6MOGOU0\\SQLEXPRESS',
-        database: 'login',
+    var config = {    
+        database: 'login_crud',
+        server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
         driver: 'msnodesqlv8',
-        options: {
-            trustedConnection: true
-        }
-    };
+       options: {       
+         trustedConnection: true
+        }  
+     }; 
+    
 
     // Check if newPassword and confirmPassword match
     if (newPassword !== confirmPassword) {
@@ -444,14 +446,15 @@ exports.getUserName = async (req, res) => {
     
     try {
         // Define your database configuration
-        const config = {
-            server: 'WIN-MUSC6MOGOU0\\SQLEXPRESS',
-            database: 'login',
+        var config = {    
+            database: 'login_crud',
+            server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
             driver: 'msnodesqlv8',
-            options: {
-                trustedConnection: true
-            }
-        };
+           options: {       
+             trustedConnection: true
+            }  
+         }; 
+        
         // Create a connection pool
         const pool = await new sql.ConnectionPool(config).connect();
 
