@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Noto+Sans:wght@100&family=Poppins:wght@100;300;400;500;600;700;800&display=swap');
+
+/* style.css */
+
+/* style.css */
+
+/* style.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    display: flex;
+    justify-content: flex-end; /* Align content to the right */
+    align-items: center;
+    height: 100vh;
+    padding-right: 20px; /* Add some padding to the right side of the page */
+}
+
+
+.side-input-module {
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 20px; /* Increase padding for better alignment */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the left */
+    width: 450px; /* Adjust the width as needed */
+}
+
+.input-fields {
+    margin-bottom: 15px; /* Increase margin for spacing */
+    width: 100%;
+}
+
+.input-fields label {
+    display: block;
+
+    margin-bottom: 5px;
+}
+
+
+.input-fields input[type="text"],
+.input-fields input[type="number"],
+.input-fields input[type="date"],
+.input-fields input[type="time"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f0f0f0;
+    outline: none;
+    vertical-align: top; /* Align the text to start from the upper part */
+}
+
+/* Increase the height for the "Brief details of Ticket/Activities" input field */
+.input-fields input[name="data[Brief details of Ticket/Activities]"] {
+    height: 80px; /* Adjust the height as needed */
+    word-wrap: break-word; /* Allow text to wrap to the next line */
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between; /* This will push the buttons to the left and right edges */
+}
+
+#back-button, #submit-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#back-button:hover, #submit-button:hover {
+    background-color: #0056b3;
+}

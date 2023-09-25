@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Noto+Sans:wght@100&family=Poppins:wght@100;300;400;500;600;700;800&display=swap');
+:root{
+    --color-primary: #7380ec;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light:rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+    
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+    
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+    
+    --box-shadow: 0 2rem 3rem var(--color-light);
+    
+    }
+    
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    
+}
+
+body{
+    height: 100vh;
+    width: 100%;
+    font-family: poppins, sans-serif;
+    font-size: 0.88rem;
+    background: #f6f6f9;
+     /*background-image: url('/images/bg.jpg');*/
+    
+    /*color: var(--color-dark);
+    background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);*/
+  
+}
+
+
+
+
+.container,
+.container-fluid{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    display: block;
+    background: #fff;
+    width: 430px;
+    padding: 30px;
+    /*box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+     rgba(0, 0, 0, 0.12) 0px -12px 30px,
+      rgba(0, 0, 0, 0.12) 0px 4px 6px, 
+      rgba(0, 0, 0, 0.17) 0px 12px 13px, 
+     rgba(0, 0, 0, 0.09) 0px -3px 5px;*/
+     
+     background: rgba(255, 255, 255, 0.25);
+     border-radius: 16px;
+     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+     backdrop-filter: blur(5.5px);
+     -webkit-backdrop-filter: blur(5.5px);
+     border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+
+.container .text{
+    font-size: 30px;
+    font-weight: 600;
+    text-align: center;
+    color:363949 ;
+}
+
+.container form{
+    margin-top: -20px;
+    font-weight: 300;
+    
+}
+
+
+.container form .data{
+    height: 45px;
+    width: 100%;
+    margin: 40px 0;
+
+}
+
+
+form .data label{
+    font-size: 15px;
+   
+}
+
+form .data input{
+    height: 100%;
+    width: 100%;
+    padding-left: 10px;
+    font-size: 17px;
+    border: 1px solid silver; 
+   opacity: 70%;
+   border-radius: 8px;
+   
+    
+}
+
+form .data input:focus{
+    border-color: #5199E4;
+    border-bottom-width: 3px;
+}
+
+
+form .forgot-pass{
+    margin-top: -8px;
+    }
+
+    form .forgot-pass a{
+        color: #1a166e;
+        text-decoration: none;
+    }
+
+    form .forgot-pass a:hover{
+        text-decoration: underline;
+    }
+
+
+form .btn{
+    margin: 30px 0;
+    height: 45px;
+    width: 100%;
+
+}    
+
+form .btn button{
+    height: 100%;
+    width: 100%;
+    background: none;
+    border: none;
+    color: #fff;
+    background: #5199E4;
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+
+}
+
+
+form .signup-Link{
+   text-align: center;
+}
+
+form .signup-Link a{
+    color: #151d72;
+    text-decoration: none;
+}
+
+
+form .signup-Link a:hover{
+    text-decoration: underline;
+}
+
+
+.container-fluid{
+    width: 600px;
+}
+
+.container-fluid img{
+   
+    width: 40%;
+}
+
+
+.error{
+    color:red;
+    text-align: center;
+    padding: 10px;
+}
+
+.good{
+    color: green;
+    text-align: center;
+    padding: 10px;
+    
+}
+
+
+
+
+
+
+

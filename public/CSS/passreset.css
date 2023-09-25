@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Noto+Sans:wght@100&family=Poppins:wght@100;300;400;500;600;700;800&display=swap');
+:root{
+    --color-primary: #7380ec;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light:rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9; 
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+    
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+    
+    --box-shadow: 0 2rem 3rem var(--color-light);
+    
+    }
+
+
+/* Reset default styles for all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+  }
+  
+  body {
+    /* Set body styles */
+    height: 100vh;
+    width: 100%;
+    font-family: poppins, sans-serif;
+    font-size: 0.88rem;
+    background: #f6f6f9;
+  }
+  
+  .container {
+    /* Center the container */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    background: #fff;
+    width: 700px;
+    padding: 30px;
+    /* Increase the height */
+    height: 400px;
+    /* Apply a shadow and background filter */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5.5px);
+    -webkit-backdrop-filter: blur(5.5px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+
+  
+  .container h1 {
+    /* Center the heading */
+    font-size: 30px;
+    font-weight: 600;
+    text-align: center;
+    color: #363949;
+  }
+  
+  .container form {
+    /* Adjust form styles */
+    margin-top: 20px;
+    font-weight: 300;
+  }
+  
+  .container form .data {
+    /* Increase the height, add spacing, and add margin between data elements */
+    height: 40px;
+    width: 100%;
+    margin: 20px 0; /* Add margin to create space between data elements */
+  }
+  
+  form .data label {
+    /* Adjust label styles */
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  
+  form .data input {
+    /* Adjust input styles */
+    height: 100%;
+    width: 100%;
+    padding-left: 10px;
+    font-size: 17px;
+    border: 1px solid silver;
+    opacity: 70%;
+    border-radius: 8px;
+    margin-bottom: 13px;
+  }
+  
+  form .data input:focus {
+    /* Add focus styles */
+    border-color: #5199e4;
+    border-bottom-width: 3px;
+  }
+  
+  form .btn-container {
+    /* Adjust button styles */
+    margin: 20px 0; /* Adjust margin */
+    height: 45px;
+    width: 60%; /* Adjust width */
+  }
+  
+  form .btn-container{
+    /* Adjust button styles */
+    height: 100%;
+    width: 100%;
+    background: none;
+    border: none;
+    color: #fff;
+    background: #5199e4;
+    font-size: 18px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
