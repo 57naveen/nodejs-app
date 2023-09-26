@@ -19,8 +19,8 @@ doenv.config(
 );
  
 var config = {    
-    database: 'login',
-    server: 'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+    database: 'login_crud',
+    server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
     driver: 'msnodesqlv8',
    options: {       
      trustedConnection: true
@@ -85,14 +85,15 @@ app.use(bodyParser.json());
 
 app.post("/signin", async (req, res) => {
     try {
-        const config = {
-            server: 'WIN-MUSC6MOGOU0\\SQLEXPRESS',
-            database: 'login',
+        var config = {    
+            database: 'login_crud',
+            server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
             driver: 'msnodesqlv8',
-            options: {
-                trustedConnection: true
-            }
-        };
+           options: {       
+             trustedConnection: true
+            }  
+         }; 
+        
 
         // Retrieve the user's email from the session
         const userEmail = req.session.email;
