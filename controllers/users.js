@@ -64,7 +64,7 @@ var config = {
         const request = new sql.Request(pool);
 
         request.input('EmailParam', sql.VarChar, email);
-        request.query('SELECT * FROM users WHERE email = @EmailParam', async (error, result) => {
+        request.query('SELECT ID, name, password FROM users WHERE email = @EmailParam', async (error, result) => {
             if (error) {
                 console.log('Error:', error);
                 return;
@@ -98,11 +98,14 @@ var config = {
                 // Correct password, proceed to generate JWT token
 
                 const id = user.ID; // Make sure the property name matches your DB schema
+                const name = user.name; // Get the user's name
                 const token = jwt.sign({ id: id }, process.env.JWT_SECRET, {
                     expiresIn: process.env.JWT_EXPIRES_IN,
                 });
 
                 console.log("The Token is: " + token);
+                 // Send the user's name as part of the response
+                
                 const cookieOptions ={
                     expires: 
                     new Date(
@@ -116,6 +119,7 @@ var config = {
 
             }
         });
+        res.status(200).json({ success: true, name: name, });
     } catch (error) {
         console.error(error);
     }
@@ -462,6 +466,7 @@ exports.sideinput = async (req, res) => {
 //////////////////////////UNDER DEVELOP///////////////////////////////////////
 
 
+/*
 
 exports.getUserName = async (req, res) => {
 
@@ -496,7 +501,7 @@ exports.getUserName = async (req, res) => {
     }
 };
 
-
+*/
 
 ////////////////////////////////////////// sign in button logic ////////////////////////////////////////////////////////////////////////////////////////////////
 

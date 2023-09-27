@@ -12,6 +12,9 @@ const session = require('express-session');
 
 
 
+
+
+
 doenv.config(
     {
         path:'./.env',
@@ -241,7 +244,67 @@ app.post("/logout", async (req, res) => {
 
 
 
+app.get('/getUserName', async (req, res) => {
+    try {
+        var config = {    
+            database:'login',
+            server:'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+            driver:'msnodesqlv8',
+           options: {       
+             trustedConnection: true
+            }  
+         }; 
+         
+        
+
+        // Retrieve the user's email from the session
+        const userEmail = req.session.email;
+
+        if (!userEmail) {
+            // If the email is not found in the session, handle the error accordingly
+            res.status(400).json({ success: false, error: "User email not found in session" });
+            return;
+        }
+
+        console.log("Received userEmail from session:", userEmail);
+       
+    
+
+        // Connect to the database
+        await sql.connect(config);
+
+        // Query the "Users" table to retrieve the username based on the email
+        const userQuery = "SELECT name FROM users WHERE email = @userEmail";
+        const userRequest = new sql.Request();
+        userRequest.input("userEmail", sql.NVarChar(255), userEmail);
+        const userResult = await userRequest.query(userQuery);
+
+        // Check if a matching user was found
+        if (userResult.recordset.length === 0) {
+            // No user found with the provided email
+            res.status(400).json({ success: false, error: "User not found" });
+            return;
+        }
+
+        // Get the username from the result
+        const name = userResult.recordset[0].name;
+       
+
+        console.log(" username from users table:", name);
+        res.status(200).json({ success: true, name });
+        
+     }
+     
+      catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+
+
 app.listen(5000, () =>
-{
+{ 
     console.log("sever started @ port 5000");
 }); 

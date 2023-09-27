@@ -8,7 +8,7 @@ router.post("/forgotPassword", userController.forgotPassword);
 router.post("/resetPassword", userController.resetPassword); // New route for resetting password
 
 router.post("/sideinput",userController.sideinput);
-router.get("/getUserName", userController.getUserName);
+//router.get("/getUserName", userController.getUserName);
 
 //router.post("/signin",userController.signin)
 

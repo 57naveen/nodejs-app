@@ -7,6 +7,8 @@ const themeToggler = document.querySelector(".theme-toggler");
 
 
 
+
+
 //  const location = path.join(__dirname,"./public");
 
 // app.use(express.static(location));
@@ -317,3 +319,30 @@ document.addEventListener('DOMContentLoaded', function () {
         logoutButton.addEventListener("click", handleLogout);
     });
     
+
+
+///////////////////////////////////user name////////////////////////////////////////////////
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Get a reference to the user name placeholder element
+    const userNamePlaceholder = document.getElementById('user-name-placeholder');
+
+    // Make a GET request to retrieve the user's name
+    fetch('/getUserName')
+        .then((response) => response.json())
+        .then((data) => {
+            console.log('Received data from the server:', data); // Add this line for debugging
+
+            if (data.success) {
+                // Update the content of the placeholder with the user name
+                userNamePlaceholder.textContent = data.name;
+            } else {
+                // Handle the case where the user's name was not found or other errors
+                userNamePlaceholder.textContent = 'User not found';
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            userNamePlaceholder.textContent = 'Error fetching user name';
+        });
+});

@@ -421,7 +421,7 @@ main .insight > div .middle{
     gap: 2rem;
     text-align:right;
     position: absolute  ;
-    right: 1%;
+    right: 4%;
 
     
 }
@@ -553,7 +553,11 @@ main .insight > div .middle{
 
     .right .profile .info{
         display: none;
+        
     }
+
+
+
 
     .right .top button{
         display: inline-block;
@@ -568,6 +572,7 @@ main .insight > div .middle{
         position: relative;
         display: none; 
         
+        
     }
 
 
@@ -577,7 +582,7 @@ main .insight > div .middle{
     }
 
 
-
+  
    
 
 }
