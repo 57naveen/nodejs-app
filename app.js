@@ -19,9 +19,9 @@ doenv.config(
 );
  
 var config = {    
-    database: 'login_crud',
-    server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
-    driver: 'msnodesqlv8',
+    database:'login',
+    server:'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+    driver:'msnodesqlv8',
    options: {       
      trustedConnection: true
     }  
@@ -86,13 +86,14 @@ app.use(bodyParser.json());
 app.post("/signin", async (req, res) => {
     try {
         var config = {    
-            database: 'login_crud',
-            server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
-            driver: 'msnodesqlv8',
+            database:'login',
+            server:'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+            driver:'msnodesqlv8',
            options: {       
              trustedConnection: true
             }  
          }; 
+         
         
 
         // Retrieve the user's email from the session
@@ -128,8 +129,8 @@ app.post("/signin", async (req, res) => {
 
         // Define a parameterized query to safely insert the sign-in time and username
         const query = `
-            INSERT INTO SignInTable (SignInTime, username)
-            VALUES (@signInTime, @username)
+            INSERT INTO SignInTable (SignInTime, username,email)
+            VALUES (@signInTime, @username,@userEmail)
         `;
 
         // Create a request object
@@ -138,6 +139,7 @@ app.post("/signin", async (req, res) => {
         // Define the parameters and their values
         request.input("signInTime", sql.NVarChar, req.body.signInTime);
         request.input("username", sql.NVarChar, username);
+        request.input("userEmail", sql.NVarChar, userEmail);
 
         // Execute the parameterized query
         await request.query(query);
@@ -148,6 +150,89 @@ app.post("/signin", async (req, res) => {
         res.json({ success: true });
     } catch (error) {
         console.error("Error inserting sign-in time into the database:", error);
+        res.status(500).json({ success: false, error: "Internal Server Error" });
+    }
+});
+
+
+app.post("/logout", async (req, res) => {
+    try {
+        var config = {    
+            database:'login',
+            server:'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+            driver:'msnodesqlv8',
+           options: {       
+             trustedConnection: true
+            }  
+         }; 
+         
+        
+
+        // Retrieve the user's email from the session
+        const userEmail = req.session.email;
+
+        if (!userEmail) {
+            // If the email is not found in the session, handle the error accordingly
+            res.status(400).json({ success: false, error: "User email not found in session" });
+            return;
+        }
+
+        console.log("Received userEmail from session:", userEmail);
+        const logoutTime = req.body.logoutTime;
+    console.log("Received logout time:", logoutTime);
+
+        // Connect to the database
+        await sql.connect(config);
+
+        // Query the "Users" table to retrieve the username based on the email
+        const userQuery = "SELECT name FROM users WHERE email = @userEmail";
+        const userRequest = new sql.Request();
+        userRequest.input("userEmail", sql.NVarChar(255), userEmail);
+        const userResult = await userRequest.query(userQuery);
+
+        // Check if a matching user was found
+        if (userResult.recordset.length === 0) {
+            // No user found with the provided email
+            res.status(400).json({ success: false, error: "User not found" });
+            return;
+        }
+
+        // Get the username from the result
+        const name = userResult.recordset[0].name;
+        const ID = userResult.recordset[0].ID;
+
+        console.log("Retrieved username from users table:", name);
+        console.log("Retrieved ID from users table:", ID);
+
+        // Define a parameterized query to safely insert the sign-in time and username
+        const query = `
+
+        INSERT INTO SignOutTable (sign_out, username,email)
+        VALUES (@logoutTime, @name,@userEmail)
+            
+        `;
+
+        //INSERT INTO logout_data (logoutTime, username)
+           // VALUES (@logoutTime, @username)
+
+        // Create a request object
+        const request = new sql.Request();
+
+        // Define the parameters and their values
+        request.input("logoutTime", sql.NVarChar, req.body.logoutTime);
+        request.input("name", sql.NVarChar, name);
+        request.input("userEmail", sql.NVarChar, userEmail);
+      
+
+        // Execute the parameterized query
+        await request.query(query);
+
+        // Close the database connection
+        await sql.close();
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Error logout time inserting sign-in time into the database:", error);
         res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 });

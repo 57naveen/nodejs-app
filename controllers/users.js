@@ -8,6 +8,7 @@
     const nodemailer = require('nodemailer')
     const axios = require('axios');
     const bodyParser = require('body-parser');
+    const doenv = require("dotenv");
    
 
 
@@ -21,15 +22,27 @@ var config = {
     }
 };*/
 
+
+doenv.config(
+    {
+        path:'env',
+    }
+);
+
+
+ 
  
 var config = {    
-    database: 'login_crud',
-    server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
-    driver: 'msnodesqlv8',
+    database:'login',
+    server:'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+    driver:'msnodesqlv8',
    options: {       
      trustedConnection: true
     }  
  }; 
+
+
+ 
 
 
 
@@ -203,13 +216,14 @@ exports.forgotPassword = async (req, res) => {
 
     // SQL Server configuration
     var config = {    
-        database: 'login_crud',
-        server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
-        driver: 'msnodesqlv8',
-        options: {       
-            trustedConnection: true
+        database:'login',
+        server:'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+        driver:'msnodesqlv8',
+       options: {       
+         trustedConnection: true
         }  
-    }; 
+     }; 
+    
 
     let token;
     let sixDigitCode; // Variable to store the six-digit code
@@ -227,13 +241,13 @@ exports.forgotPassword = async (req, res) => {
         }
 
         // Email exists, generate a reset token
-        token = crypto.randomBytes(32).toString('hex');
+        //token = crypto.randomBytes(32).toString('hex');
 
         // Generate a random six-digit code
         sixDigitCode = Math.floor(100000 + Math.random() * 900000);
 
         // Store the token and code in the session
-        req.session.resetToken = token;
+       // req.session.resetToken = token;
         req.session.sixDigitCode = sixDigitCode;
 
       
@@ -253,10 +267,10 @@ const formattedExpiresTime = `${year}-${month}-${day} ${hours}:${minutes}:${seco
 
 const insertTokenQuery = await pool.request()
     .input('email', sql.NVarChar, email)
-    .input('token', sql.NVarChar, token)
+   // .input('token', sql.NVarChar, token)
     .input('expires', sql.NVarChar, formattedExpiresTime) // Use formatted time
     .input('sixDigitCode',sql.NVarChar, sixDigitCode)
-    .query('INSERT INTO PasswordResetTokens (email, token, expires,verification_code) VALUES (@email, @token, @expires,@sixDigitCode)');
+    .query('INSERT INTO PasswordResetTokens (email,expires,verification_code) VALUES (@email,@expires,@sixDigitCode)');
 
 
 
@@ -312,7 +326,7 @@ exports.resetPassword = async (req, res) => {
     const {Verfication, newPassword, confirmPassword } = req.body;
 
     // Extract the token from session
-    const token = req.session.resetToken;
+    //const token = req.session.resetToken;
    // const code=req.session.verification_code;
    const code=Verfication;
 
@@ -322,13 +336,14 @@ exports.resetPassword = async (req, res) => {
 
     // SQL Server configuration
     var config = {    
-        database: 'login_crud',
-        server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
-        driver: 'msnodesqlv8',
+        database:'login',
+        server:'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+        driver:'msnodesqlv8',
        options: {       
          trustedConnection: true
         }  
      }; 
+    
     
 
     // Check if newPassword and confirmPassword match
@@ -341,13 +356,13 @@ exports.resetPassword = async (req, res) => {
 
         // Check if the token is valid and not expired
         const queryResult = await pool.request()
-            .input('token', sql.NVarChar, token)
+           // .input('token', sql.NVarChar, token)
             .input('code', sql.NVarChar, code)
             .query('SELECT * FROM PasswordResetTokens WHERE verification_code = @code AND expires > GETDATE()');
 
         if (queryResult.recordset.length === 0) {
             // Token is either invalid or expired
-            return res.render('passreset', { msg: 'Invalid or expired verification_code', msg_type: 'error' });
+            return res.render('passreset', { msg: 'Invalid or expired verification code', msg_type: 'error' });
         }
 
         // Valid token, hash the new password
@@ -362,12 +377,12 @@ exports.resetPassword = async (req, res) => {
         if (updateUserQuery.rowsAffected[0] === 1) {
             // Password successfully updated
             // Remove the used token from the 'PasswordResetTokens' table
-            const deleteTokenQuery = await pool.request()
-                .input('token', sql.NVarChar, token)
+            const deletecodeQuery = await pool.request()
+                //.input('token', sql.NVarChar, token)
                 .input('code', sql.NVarChar, code)
                 .query('DELETE FROM PasswordResetTokens WHERE verification_code = @code');
 
-            if (deleteTokenQuery.rowsAffected[0] === 1) {
+            if (deletecodeQuery.rowsAffected[0] === 1) {
                 // Token successfully deleted
                 return res.render('passreset', { msg: 'Password reset successful', msg_type: 'good' });
             } else {
@@ -454,13 +469,14 @@ exports.getUserName = async (req, res) => {
     try {
         // Define your database configuration
         var config = {    
-            database: 'login_crud',
-            server: 'WIN-A6RB8151NC6\\SQLEXPRESS',
-            driver: 'msnodesqlv8',
+            database:'login',
+            server:'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+            driver:'msnodesqlv8',
            options: {       
              trustedConnection: true
             }  
          }; 
+        
         
         // Create a connection pool
         const pool = await new sql.ConnectionPool(config).connect();

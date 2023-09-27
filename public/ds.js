@@ -228,12 +228,52 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener("DOMContentLoaded", function () {
         // Get a reference to the sign-in button
         const signInButton = document.getElementById("sign-in-button");
-    
-        // Add a click event listener to the sign-in button
-        signInButton.addEventListener("click", function () {
-            // Get the current date and time
-            //const signInTime = new Date().toISOString();
+        const logoutButton = document.getElementById("logout-button"); // Add reference to the logout button
         
+        let isLoggedIn = false; // Initialize the login state flag
+        
+        // Add a click event listener to the sign-in button
+        signInButton.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+        
+            if (!isLoggedIn) { // If not logged in, perform sign-in action
+                const currentDate = new Date();
+                const year = currentDate.getFullYear();
+                const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                const day = String(currentDate.getDate()).padStart(2, '0');
+                const hours = String(currentDate.getHours()).padStart(2, '0');
+                const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                
+                const signInTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                
+                fetch("/signin", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ signInTime }),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    // Handle the response from the server if needed
+                    console.log("Sign-in time sent to the server successfully.");
+                    isLoggedIn = true; // Update login state flag
+                    signInButton.textContent = "Logout"; // Change button text to "Logout"
+                    logoutButton.style.display = "inline-block"; // Show the logout button
+                })
+                .catch((error) => {
+                    console.error("Error sending sign-in time to the server:", error);
+                });
+            } 
+        });
+        
+        // Function to handle the "Logout" action
+        function handleLogout() {
+            // Implement your logout logic here...
+            // For example, you can send the logout time to the server and handle the response.
+    
+            // Calculate logoutTime within this function
             const currentDate = new Date();
             const year = currentDate.getFullYear();
             const month = String(currentDate.getMonth() + 1).padStart(2, '0');
@@ -241,25 +281,39 @@ document.addEventListener('DOMContentLoaded', function () {
             const hours = String(currentDate.getHours()).padStart(2, '0');
             const minutes = String(currentDate.getMinutes()).padStart(2, '0');
             const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    
+            const logoutTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
             
-            const signInTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-            // Send the sign-in time to the server using an HTTP request (e.g., fetch)
-            fetch("/signin", { // Updated endpoint
+            // Send the logout time to the server using an HTTP request (e.g., fetch)
+            fetch("/logout", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ signInTime }),
+                body: JSON.stringify({ logoutTime }),
             })
             .then((response) => response.json())
             .then((data) => {
                 // Handle the response from the server if needed
-                console.log("Sign-in time sent to the server successfully.");
+                console.log("Logout time sent to the server successfully.");
+                isLoggedIn = false;
+                signInButton.textContent = "Sign In";
+                logoutButton.style.display = "none";
             })
             .catch((error) => {
-                console.error("Error sending sign-in time to the server:", error);
+                console.error("Error sending logout time to the server:", error);
             });
+        }
+    
+        // Add click event listeners to the buttons
+        signInButton.addEventListener("click", function () {
+            if (isLoggedIn) {
+                handleLogout();
+            } else {
+                handleSignIn();
+            }
         });
+    
+        logoutButton.addEventListener("click", handleLogout);
     });
-  
     
