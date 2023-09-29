@@ -94,6 +94,23 @@
       window.location.href = '/dash';
 });
 
+var sidebar = document.querySelector('.sidebar');
+
+    // Get a reference to the button that toggles the sidebar
+    var toggleButton = document.getElementById('toggleSidebarButton'); // You should add an ID to your button for this
+
+    // Function to toggle the sidebar's visibility
+    function toggleSidebar() {
+        if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+            sidebar.style.display = 'block';
+        } else {
+            sidebar.style.display = 'none';
+        }
+    }
+
+    // Add a click event listener to the button
+    toggleButton.addEventListener('click', toggleSidebar);
+
     </script>
 
     </div>

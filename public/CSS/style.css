@@ -40,7 +40,12 @@ body{
     font-family: poppins, sans-serif;
     font-size: 0.88rem;
     background: #f6f6f9;
-     /*background-image: url('/images/bg.jpg');*/
+    background-image: url('/images/195..jpg');
+     background-size: cover;
+background-repeat: no-repeat;
+background-position: center center;
+background-color: rgba(0, 0, 0, 1); /* Adjust the opacity by changing the last value (0.5 in this example) */
+    
     
     /*color: var(--color-dark);
     background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);*/
@@ -58,7 +63,7 @@ body{
     transform: translate(-50%,-50%);
     display: block;
     background: #fff;
-    width: 430px;
+    width: 400px;
     padding: 30px;
     /*box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
      rgba(0, 0, 0, 0.12) 0px -12px 30px,

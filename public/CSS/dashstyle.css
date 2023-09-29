@@ -65,6 +65,10 @@ body{
     user-select: none;
     overflow-x: hidden;
    color: var(--color-dark);  
+   background-image: url('/images/195..jpg');
+   background-size: cover;
+background-repeat: no-repeat;
+background-position: center center;
 
 }
 
@@ -386,6 +390,7 @@ main .insight > div .middle{
     display: none;
 }
 
+/*
 .right .theme-toggler{
     background: var(--color-light);
     display: flex;
@@ -414,6 +419,7 @@ main .insight > div .middle{
     color: White;
     border-radius: var(--border-radius-1);
 }
+*/
 
 
 .right .top .profile{
