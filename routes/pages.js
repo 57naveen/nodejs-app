@@ -35,10 +35,8 @@ router.get("/passreset",(req,res)=>
     res.render("passreset")
 })
 
- router.get("/sideinput",(req,res)=>
-{
-     res.render("sideinput")
- })
+
+
 
 
 

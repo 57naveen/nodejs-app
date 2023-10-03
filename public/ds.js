@@ -130,6 +130,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
  /////////////////////////////////////////////////////////
+ 
+ /*
  document.addEventListener('DOMContentLoaded', function() {
     const addTaskLink = document.getElementById('add-task-link');
 
@@ -142,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+*/
 
 
 
@@ -346,3 +349,84 @@ document.addEventListener('DOMContentLoaded', function () {
             userNamePlaceholder.textContent = 'Error fetching user name';
         });
 });
+
+
+/////////////////////////side input//////////////////////
+// JavaScript code to toggle the visibility of the "side input" module
+const addTaskLink = document.querySelector('#add-task-link');
+const sideInputContainer = document.querySelector('#side-input-container');
+const submitButton = document.querySelector('#submit-button');
+const backButton = document.querySelector('#back-button');
+
+addTaskLink.addEventListener('click', function(event) {
+    event.preventDefault();
+    sideInputContainer.style.width = '23%'; // Set the width to make it visible
+    submitButton.style.display = 'block'; // Display the Submit button
+});
+
+// Function to hide the "side input" module
+function hideSideInput() {
+    sideInputContainer.style.width = '0'; // Set the width to 0 to hide it
+    submitButton.style.display = 'none'; // Hide the Submit button
+}
+
+backButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    hideSideInput(); // Hide the "side input" module when Back button is clicked
+});
+
+document.getElementById('back-button').addEventListener('click', function() {
+    window.location.href = 'dash';
+});
+
+backButton.addEventListener('click', function() {
+    // Perform any necessary actions here, such as navigation
+    window.location.href = 'dash'; // Redirect to the specified page
+});
+
+
+
+
+///////////////////////////side input data to serve side////////////////////////////////////
+document.getElementById('side-input-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get the form data
+    const formData = new FormData(this);
+
+    // Convert the form data to a JSON object
+    const formDataJson = {};
+    formData.forEach((value, key) => {
+        formDataJson[key] = value;
+    });
+
+    // Send the form data to the server using Fetch API or another AJAX method
+    fetch('/sideinput', {
+        method: 'POST', // Use the appropriate HTTP method (POST, PUT, etc.)
+        headers: {
+            'Content-Type': 'application/json', // Set the content type
+        },
+        body: JSON.stringify(formDataJson), // Convert the JSON object to a string
+    })
+    .then(response => {
+        if (response.ok) {
+            // Handle the successful response from the server
+            console.log('Data sent successfully');
+
+            // Clear the form fields
+            this.reset(); // 'this' refers to the form element
+
+            // Navigate to the dashboard screen (change the URL as needed)
+            window.location.href = 'dash';
+        } else {
+            // Handle errors here
+            console.error('Error sending data to the server');
+        }
+    })
+    .catch(error => {
+        // Handle network errors here
+        console.error('Network error:', error);
+    });
+});
+
+ 

@@ -684,3 +684,105 @@ main .insight > div .middle{
 #logout-button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
+
+
+/*-------------------------side input css---------------------------------------*/
+
+
+/* Style for the side input module container */
+#side-input-container {
+    width: 0; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background-color: #fff; /* Background color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Optional shadow effect */
+    overflow-y: auto; /* Add scroll if content exceeds height */
+    transition: width 0.3s ease-in-out;
+}
+
+/* Style for the "side input" module */
+.side-input-module {
+    padding: 20px; /* Add spacing as needed */
+    font-weight: bold;
+}
+
+/* Style for form elements within the "side input" module */
+.side-input-module label {
+    font-weight: bold;
+}
+
+.side-input-module input[type="text"],
+.side-input-module input[type="number"],
+.side-input-module input[type="date"],
+.side-input-module input[type="time"],
+.side-input-module textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Style for buttons within the "side input" module */
+.side-input-module .button-container button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.side-input-module .button-container button:hover {
+    background-color: #0056b3; /* Hover background color */
+}
+
+/* Style for the "Back" button */
+.side-input-module #back-button {
+    background-color: #ccc; /* Back button background color */
+    color: #333; /* Back button text color */
+}
+
+.side-input-module #back-button:hover {
+    background-color: #bbb; /* Hover background color */
+}
+#back-button, #submit-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#back-button:hover, #submit-button:hover {
+    background-color: #0056b3;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between; /* This will push the buttons to the left and right edges */
+}
+
+
+/* Style for the "Back" button */
+#back-button {
+    padding: 10px 20px;
+    background-color: #ccc; /* Back button background color */
+    color: #333; /* Back button text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#back-button:hover {
+    background-color: #bbb; /* Hover background color */
+}

@@ -8,6 +8,8 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require('body-parser');
 //const dashboard = require('./script');
 const session = require('express-session');
+const multer = require('multer');
+const upload = multer(); // Initialize multer
 
 
 
@@ -301,6 +303,74 @@ app.get('/getUserName', async (req, res) => {
     }
 });
 
+
+app.post('/sideinput', async (req, res) => {
+    const { Date, ConsultantName, TicketNumber, TypeOfTicket, ProcessDocumentRevision, Status, From, To, TicketAssignedDate, BriefDetails } = req.body;
+    
+    // Define your SQL Server connection configuration
+    const config = {    
+        database: 'login',
+        server: 'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+        driver: 'msnodesqlv8',
+        options: {       
+            trustedConnection: true
+        }  
+    }; 
+
+    try {
+        // Check if TicketNumber is null or undefined
+        if (TicketNumber === null || TicketNumber === undefined) {
+            return res.render('sideinput', { msg: 'Ticket Number is required', msg_type: 'error' });
+        }
+
+        // Create a SQL Server connection pool
+        const pool = new sql.ConnectionPool(config);
+        await pool.connect();
+
+        // Define your SQL query to insert data into the database
+        const query = `
+            INSERT INTO details (Date, ConsultantName, TicketNumber, TypeOfTicket, ProcessDocumentRevision, Status, FromTime, ToTime, TicketAssignedDate, BriefDetails)
+            VALUES (
+                @Date,
+                @ConsultantName,
+                @TicketNumber,
+                @TypeOfTicket,
+                @ProcessDocumentRevision,
+                @Status,
+                @From,
+                @To,
+                @TicketAssignedDate,
+                @BriefDetails
+            )
+        `;
+
+        // Execute the SQL query with parameters
+        const request = pool.request();
+        request.input('Date', sql.Date, Date);
+        request.input('ConsultantName', sql.NVarChar, ConsultantName);
+        request.input('TicketNumber', sql.Int, TicketNumber);
+        request.input('TypeOfTicket', sql.NVarChar, TypeOfTicket);
+        request.input('ProcessDocumentRevision', sql.NVarChar, ProcessDocumentRevision);
+        request.input('Status', sql.NVarChar, Status);
+        request.input('From', sql.Time, From);
+        request.input('To', sql.Time, To);
+        request.input('TicketAssignedDate', sql.Date, TicketAssignedDate);
+        request.input('BriefDetails', sql.NVarChar, BriefDetails);
+
+        await request.query(query);
+
+        console.log('Data inserted successfully.');
+
+        // Close the connection pool
+        await pool.close();
+
+        return res.render('dash');
+      
+    } catch (error) {
+        console.error('Error inserting data:', error);
+    return res.render('dash', { msg: 'Error inserting data', msg_type: 'error' });
+    }
+});
 
 
 
