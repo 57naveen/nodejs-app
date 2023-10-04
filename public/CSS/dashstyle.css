@@ -64,11 +64,13 @@ body{
     background: var(--color-background);
     user-select: none;
     overflow-x: hidden;
-   color: var(--color-dark);  
+   
+   /* color: var(--color-dark);  
    background-image: url('/images/195..jpg');
    background-size: cover;
 background-repeat: no-repeat;
-background-position: center center;
+background-position: center center;*/
+
 
 }
 

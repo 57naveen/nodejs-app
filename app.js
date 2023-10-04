@@ -10,6 +10,13 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const multer = require('multer');
 const upload = multer(); // Initialize multer
+const { google } = require('googleapis'); 
+const nodemailer = require('nodemailer');
+const fs = require('fs');
+const { promisify } = require('util');
+const readFileAsync = promisify(fs.readFile);
+
+
 
 
 
@@ -303,6 +310,46 @@ app.get('/getUserName', async (req, res) => {
     }
 });
 
+// Function to update Google Sheets
+async function updateGoogleSheets(data) {
+    try {
+        // Load your service account credentials
+        const creds = require('./public/tranquil.json');
+
+        // Create a JWT client
+        const client = new google.auth.JWT(
+            creds.client_email,
+            null,
+            creds.private_key,
+            ['https://www.googleapis.com/auth/spreadsheets']
+        );
+
+        // Authorize the client and get an access token
+        await client.authorize();
+
+        // Define the range and values you want to update
+        const spreadsheetId = '16Yjv9e9LSFd5Mu5Un2MH8wcIuIJag9-wh_n5PtmfHF0'; // Replace with your actual spreadsheet ID
+        const range = 'Sheet1!A1:B1'; // Update this to your desired range
+        const values = [
+            [data.Date, data.ConsultantName, data.TicketNumber, data.TypeOfTicket, data.ProcessDocumentRevision, data.Status, data.From, data.To, data.TicketAssignedDate, data.BriefDetails],
+        ];
+
+        // Update Google Sheets
+        const response = await sheets.spreadsheets.values.update({
+            auth: client,
+            spreadsheetId: spreadsheetId,
+            range: range,
+            valueInputOption: 'RAW',
+            resource: {
+                values: values,
+            },
+        });
+
+        console.log('Updated range:', response.data.updatedRange);
+    } catch (error) {
+        console.error('Error updating Google Sheets:', error.message);
+    }
+}
 
 app.post('/sideinput', async (req, res) => {
     const { Date, ConsultantName, TicketNumber, TypeOfTicket, ProcessDocumentRevision, Status, From, To, TicketAssignedDate, BriefDetails } = req.body;
@@ -360,6 +407,7 @@ app.post('/sideinput', async (req, res) => {
         await request.query(query);
 
         console.log('Data inserted successfully.');
+        await updateGoogleSheets(req.body);
 
         // Close the connection pool
         await pool.close();
@@ -370,7 +418,175 @@ app.post('/sideinput', async (req, res) => {
         console.error('Error inserting data:', error);
     return res.render('dash', { msg: 'Error inserting data', msg_type: 'error' });
     }
+
+
+    
 });
+
+ 
+
+
+/*
+
+
+// Create a transporter using SMTP transport
+const transporter = nodemailer.createTransport({
+                     host: 'smtp.gmail.com',
+                 port: 465,
+                secure: true, // Set to true for secure (SSL/TLS) connection
+                auth: {
+                    user: 'esspldummy18@gmail.com',
+                    pass: 'ltbbkzepalbenyce'
+    },
+   
+
+    // Increase the timeout (in milliseconds)
+    timeout: 120000, // 60 seconds, adjust as needed
+});
+
+// Function to send an email with Google Sheet as an attachment
+async function sendEmailWithAttachment() {
+    try {
+        // Define email data
+        const mailOptions = {
+            from: 'esspldummy18@gmail.com',
+            to: 'naveenkishored18ca057@gmail.com',
+            subject: 'Daily Time Sheet with Attachment',
+            text: 'Hello, this is the email content.',
+            attachments: [
+                {
+                    filename: 'Time sheet.xlsx', // Customize the filename
+                    path: 'path/to/your/google/sheet.xlsx', // Replace with the actual path to your Google Sheet
+                },
+            ],
+        };
+
+        // Send the email
+        await transporter.sendMail(mailOptions);
+
+        console.log('Email sent successfully with attachment.');
+    } catch (error) {
+        console.error('Error sending email with attachment:', error);
+    }
+}
+
+// Call the sendEmailWithAttachment function after updating Google Sheets
+sendEmailWithAttachment();
+*/
+
+// Load your service account credentials (JSON key file)
+const creds = require('./public/tranquil.json');
+
+// Create a JWT client for Google Drive
+const driveClient = new google.auth.JWT(
+    creds.client_email,
+    null,
+    creds.private_key,
+    [
+        'https://www.googleapis.com/auth/drive.readonly',
+        'https://www.googleapis.com/auth/gmail.send' // Add Gmail send scope for sending emails
+    ]
+);
+
+// Authorize the client and get an access token for Google Drive
+driveClient.authorize(async (err, tokens) => {
+    if (err) {
+        console.error('Authorization error for Google Drive:', err);
+        return;
+    }
+
+    try {
+        // Create a Google Drive API instance
+        const drive = google.drive({ version: 'v3', auth: driveClient });
+
+        // Specify the ID of the Google Drive file you want to download and export
+        const fileId = '16Yjv9e9LSFd5Mu5Un2MH8wcIuIJag9-wh_n5PtmfHF0'; // Replace with the actual file ID
+
+        // Export the Google Docs file as a PDF
+        const exportResponse = await drive.files.export({
+            fileId: fileId,
+            mimeType: 'application/pdf'
+        }, {
+            responseType: 'stream'
+        });
+
+        // Read the exported PDF content as a buffer
+        const pdfBuffer = await new Promise((resolve, reject) => {
+            const chunks = [];
+            exportResponse.data
+                .on('data', (chunk) => chunks.push(chunk))
+                .on('end', () => resolve(Buffer.concat(chunks)))
+                .on('error', reject);
+        });
+
+        // Create a Nodemailer transporter
+        const transporter = nodemailer.createTransport({
+            service: 'Gmail', // Or use your email provider's SMTP configuration
+            auth: {
+                user: 'esspldummy18@gmail.com',
+                pass: 'ltbbkzepalbenyce' // Replace with your email password or generate an app-specific password
+            },
+        });
+
+        // Define email data
+        const mailOptions = {
+            from: 'esspldummy18@gmail.com',
+            to: 'naveenkishored18ca057@gmail.com',
+            subject: 'Daily Time Sheet with Attachment',
+            text: 'Hello, this is the email content.',
+            attachments: [
+                {
+                    filename: 'time_sheet.pdf', // Customize the filename
+                    content: pdfBuffer, // Attach the PDF content as a buffer
+                },
+            ],
+        };
+
+        // Send the email
+        const info = await transporter.sendMail(mailOptions);
+
+        console.log('Email sent successfully:', info.response);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

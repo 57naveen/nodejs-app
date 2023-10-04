@@ -39,7 +39,11 @@ body{
     width: 100%;
     font-family: poppins, sans-serif;
     font-size: 0.88rem;
+    
     background: #f6f6f9;
+
+    
+    /*
     background-image: url('/images/195..jpg');
      background-size: cover;
 background-repeat: no-repeat;
