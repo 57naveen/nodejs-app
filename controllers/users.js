@@ -34,15 +34,13 @@ doenv.config(
  
  
 var config = {    
-    database:'login',
-    server:'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+    database:'login_crud',
+    server:'WIN-A6RB8151NC6\\SQLEXPRESS',
     driver:'msnodesqlv8',
    options: {       
      trustedConnection: true
     }  
  }; 
-
-
  
 
 
@@ -221,8 +219,8 @@ exports.forgotPassword = async (req, res) => {
 
     // SQL Server configuration
     var config = {    
-        database:'login',
-        server:'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+        database:'login_crud',
+        server:'WIN-A6RB8151NC6\\SQLEXPRESS',
         driver:'msnodesqlv8',
        options: {       
          trustedConnection: true
@@ -341,8 +339,8 @@ exports.resetPassword = async (req, res) => {
 
     // SQL Server configuration
     var config = {    
-        database:'login',
-        server:'WIN-MUSC6MOGOU0\\SQLEXPRESS',
+        database:'login_crud',
+        server:'WIN-A6RB8151NC6\\SQLEXPRESS',
         driver:'msnodesqlv8',
        options: {       
          trustedConnection: true
