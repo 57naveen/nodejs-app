@@ -237,7 +237,7 @@ exports.forgotPassword = async (req, res) => {
         // Check if the email exists in the database
         const queryResult = await pool.request()
             .input('email', sql.NVarChar, email)
-            .query('SELECT * FROM users WHERE email = @email');
+            .query('SELECT name FROM users WHERE email = @email');
 
         if (queryResult.recordset.length === 0) {
             return res.render('forgotpage', { msg: 'Failed to send reset email', msg_type: 'error' });
@@ -245,6 +245,9 @@ exports.forgotPassword = async (req, res) => {
 
         // Email exists, generate a reset token
         //token = crypto.randomBytes(32).toString('hex');
+        
+        // Email exists, get the user's name
+        userName = queryResult.recordset[0].name;
 
         // Generate a random six-digit code
         sixDigitCode = Math.floor(100000 + Math.random() * 900000);
@@ -297,9 +300,20 @@ const insertTokenQuery = await pool.request()
         const mailOptions = {
             from: 'esspldummy18@gmail.com',
             to: email,
-            subject: 'Password Reset Request',
-            text: `To reset your password, click the following link: "http://localhost:5000/passreset\n\n Verfication code: ${sixDigitCode}`,
-           // html: `To reset your password, click the following link: <a href="http://localhost:5000/passreset?token=${token}">Reset Password</a>`
+            subject: 'Reset Your Password',
+            text: `Dear ${userName},
+
+            You recently requested to reset your password. To initiate the process, 
+            please click on the following link:
+            [http://localhost:5000/passreset]
+
+            Verfication code: ${sixDigitCode}
+            
+            If you did not make this request, you can ignore this email; your password will remain unchanged.
+            
+            Best regards,
+            Enterprise Software Solutions PVT LTD `,
+          
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
