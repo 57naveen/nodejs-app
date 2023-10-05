@@ -102,25 +102,51 @@
                                 <input type="number" id="TicketNumber" name="TicketNumber" placeholder="Ticket Number" required>
                             </div>
                             <!-- Add other input fields here -->
-                              <div class="input-fields">
+                            <!--  <div class="input-fields">
             <lable>Type of Ticket</lable>
             <input type="text" id="TypeOfTicket" placeholder="Type of ticket" name="TypeOfTicket" required>
 
-        </div>
+        </div>  -->
 
+
+          <div class="input-fields">
+    <label for="Type of Ticket">Type of Ticket</label>
+    <select id="TypeOfTicket" name="TypeOfTicket" required>
+    <option value="" disabled selected>Select Type of Ticket</option>
+        <option value="P1">P1</option>
+        <option value="P2">P2</option>
+        <option value="P3">P3</option>
+         <option value="P4">P4</option>
+        <!-- Add more options as needed -->
+    </select> 
+</div>
+  <br>
 
         <div class="input-fields">
-            <lable>Process / Document revison</lable>
+            <lable>Process / Document revision</lable>
             <input type="text" id="ProcessDocumentRevision" placeholder="Process / Document revison" name="ProcessDocumentRevision" required>
 
         </div>
+       
 
-
-        <div class="input-fields">
+       <!-- <div class="input-fields">
             <lable>Status</lable>
             <input type="text" id="Status" placeholder="Status" name="Status" required>
 
         </div>
+    -->
+      <div class="input-fields">
+    <label for="Status">Status</label>
+    <select id="Status" name="Status" required>
+         <option value="" disabled selected>Select Status</option> <!-- Default option -->
+        <option value="Open">Open</option>
+        <option value="Closed">Closed</option>
+        <option value="In progress">In progress</option>
+        <!-- Add more options as needed -->
+    </select> 
+</div>
+
+<br>
 
 
 

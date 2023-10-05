@@ -788,3 +788,77 @@ main .insight > div .middle{
 #back-button:hover {
     background-color: #bbb; /* Hover background color */
 }
+
+/*-----------------drop dowm css----------------------------*/
+/* Style for the container div */
+.input-fields {
+    margin-bottom: -1px;
+}
+
+/* Style for the label */
+.input-fields label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Style for the select dropdown container */
+.input-fields select {
+    width: 100%;
+    padding: 12px; /* Adjust padding as needed */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+    outline: none; /* Remove the default outline on focus */
+    transition: border-color 0.3s; /* Smooth transition for border color on focus */
+
+    /* Customize the dropdown arrow */
+    appearance: none; /* Remove the default arrow in some browsers */
+    background-image: url('arrow-down.png'); /* Replace with your arrow image */
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-size: 20px; /* Adjust the size of the arrow image */
+    padding-right: 30px; /* Ensure space for the arrow */
+}
+
+/* Style for the select dropdown on hover and focus */
+.input-fields select:hover,
+.input-fields select:focus {
+    border-color: #007bff; /* Change border color on hover/focus */
+}
+
+
+/* Style for the select dropdown */
+.input-fields select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px; /* Adjust font size as needed */
+    background-color: #fff;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s;
+
+    appearance: none;
+    background-image: url('arrow-down.png');
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+    padding-right: 30px;
+}
+
+/* Style for the select dropdown on hover and focus */
+.input-fields select:hover,
+.input-fields select:focus {
+    border-color: #007bff;
+}
+
+
+
+
+
+
+
