@@ -429,4 +429,5 @@ document.getElementById('side-input-form').addEventListener('submit', function(e
     });
 });
 
- 
+ /////////////////////////////loading buffer////////////////////////////////////////////
+        

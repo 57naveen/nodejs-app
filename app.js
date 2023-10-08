@@ -17,6 +17,8 @@ const fs = require('fs');
 const { promisify } = require('util');
 const readFileAsync = promisify(fs.readFile);
 const ExcelJS = require('exceljs');
+const crypto = require('crypto');
+const schedule = require('node-schedule');
 
 
 
@@ -142,11 +144,27 @@ app.post("/signin", async (req, res) => {
         const username = userResult.recordset[0].name;
         console.log("Retrieved username from users table:", username);
 
+        // Generate a random token of a specific length (e.g., 32 characters)
+function generateRandomToken(length) {
+    return crypto.randomBytes(length).toString('hex');
+}
+
+// Usage example:
+const token = generateRandomToken(10); 
+
         // Define a parameterized query to safely insert the sign-in time and username
-        const query = `
+       /* const query = `
             INSERT INTO SignInTable (SignInTime, username,email)
             VALUES (@signInTime, @username,@userEmail)
-        `;
+        `;*/
+       
+        const query = `
+        INSERT INTO EmployeeAttendance ( username,email,SignInTime, Token)
+         VALUES (@username,@userEmail,@signInTime,@token)
+    `;
+       
+    req.session.Token = token;
+        
 
         // Create a request object
         const request = new sql.Request();
@@ -155,6 +173,7 @@ app.post("/signin", async (req, res) => {
         request.input("signInTime", sql.NVarChar, req.body.signInTime);
         request.input("username", sql.NVarChar, username);
         request.input("userEmail", sql.NVarChar, userEmail);
+        request.input("token", sql.NVarChar, token);
 
         // Execute the parameterized query
         await request.query(query);
@@ -170,6 +189,45 @@ app.post("/signin", async (req, res) => {
 });
 
 
+// Define a scheduled job to update SignOutTime every day at a specific time (e.g., midnight '0 0 * * *' or */1 * * * *' )
+const updateSignOutTimeJob = schedule.scheduleJob('0 0 * * *' , async () => {
+    try {
+        var config = {    
+            database:'login_crud',
+            server:'WIN-A6RB8151NC6\\SQLEXPRESS',
+            driver:'msnodesqlv8',
+           options: {       
+             trustedConnection: true
+            }  
+         }; 
+        // Connect to the database
+        await sql.connect(config);
+
+        // Define the query to update SignOutTime
+        const query = `
+            UPDATE EmployeeAttendance
+            SET SignOutTime = GETDATE() -- Use your appropriate date/time function here
+            WHERE SignOutTime IS NULL; -- Update only if SignOutTime is NULL
+        `;
+
+        // Create a request object
+        const request = new sql.Request();
+
+        // Execute the query to update SignOutTime
+        const result = await request.query(query);
+
+        // Close the database connection
+        await sql.close();
+
+        console.log('SignOutTime updated for records:', result.rowsAffected);
+    } catch (error) {
+        console.error('Error updating SignOutTime:', error);
+    }
+});
+
+
+
+
 app.post("/logout", async (req, res) => {
     try {
         var config = {    
@@ -181,7 +239,7 @@ app.post("/logout", async (req, res) => {
             }  
          }; 
         
-         
+         const token = req.session.Token;
         
 
         // Retrieve the user's email from the session
@@ -221,16 +279,20 @@ app.post("/logout", async (req, res) => {
         console.log("Retrieved ID from users table:", ID);
 
         // Define a parameterized query to safely insert the sign-in time and username
-        const query = `
+        /*const query = `
 
         INSERT INTO SignOutTable (sign_out, username,email)
         VALUES (@logoutTime, @name,@userEmail)
             
+        `;*/
+        const query = `
+
+        update EmployeeAttendance set SignOutTime=@logoutTime where username=@name and email=@userEmail and Token=@token and SignOutTime IS NULL
+            
         `;
+        
 
-        //INSERT INTO logout_data (logoutTime, username)
-           // VALUES (@logoutTime, @username)
-
+     
         // Create a request object
         const request = new sql.Request();
 
@@ -238,13 +300,14 @@ app.post("/logout", async (req, res) => {
         request.input("logoutTime", sql.NVarChar, req.body.logoutTime);
         request.input("name", sql.NVarChar, name);
         request.input("userEmail", sql.NVarChar, userEmail);
+        request.input("token", sql.NVarChar, token);
       
 
         // Execute the parameterized query
         await request.query(query);
 
         // Close the database connection
-        await sql.close();
+        await sql.close(); 
 
         res.json({ success: true });
     } catch (error) {
